@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book tickets for The Wonderment Tour — A.R. Rahman Live across Chennai, Mumbai, Dubai, London, and New York in 2026.">
+  <title>Tickets | The Wonderment Tour</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Fixed Backdrop ── */
+    .tickets-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+    .tickets-backdrop img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+    .tickets-backdrop-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(
+        180deg,
+        rgba(5, 2, 16, 0.82) 0%,
+        rgba(5, 2, 16, 0.75) 30%,
+        rgba(5, 2, 16, 0.85) 100%
+      );
+      backdrop-filter: blur(2px);
+    }
+
+    .tickets-hero {
+      padding: 120px 40px 40px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .tickets-hero p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-top: 12px;
+    }
+
+    .tickets-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Ticket Card ── */
+    .ticket-card {
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-glass);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.4s ease;
+    }
+    .ticket-card:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 8px 48px rgba(168, 85, 247, 0.15);
+    }
+    .ticket-card.highlight {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 40px rgba(245, 158, 11, 0.2);
+    }
+
+    /* Accent top bar */
+    .ticket-accent {
+      height: 4px;
+      background: var(--gradient-primary);
+    }
+
+    .ticket-body {
+      padding: 32px 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+
+    /* Left side: Event details */
+    .ticket-info h2 {
+      font-family: var(--font-heading);
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .ticket-event-name {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent-purple);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .ticket-detail-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .ticket-detail-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+    .ticket-detail-list li span.detail-icon {
+      font-size: 1.1rem;
+      width: 22px;
+      text-align: center;
+    }
+
+    /* Right side: Pricing */
+    .ticket-pricing h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .price-tier {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-glass);
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    .price-tier:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: var(--border-glow);
+    }
+    .price-tier-left {
+      display: flex;
+      flex-direction: column;
+    }
+    .price-tier-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .price-tier-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .price-tier-amount {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+    }
+
+    .price-tier.vip {
+      border-color: rgba(245, 158, 11, 0.3);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    /* Book button */
+    .ticket-cta {
+      padding: 0 36px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .ticket-cta .btn {
+      flex: 1;
+      min-width: 200px;
+      text-align: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 800px) {
+      .tickets-hero { padding: 100px 20px 30px; }
+      .tickets-container { padding: 10px 16px 60px; }
+      .ticket-body {
+        grid-template-columns: 1fr;
+        padding: 24px 20px;
+        gap: 24px;
+      }
+      .ticket-cta { padding: 0 20px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Fixed Backdrop ═══ -->
+  <div class="tickets-backdrop">
+    <img src="ticketsphoto.png" alt="" aria-hidden="true">
+  </div>
+  <div class="tickets-backdrop-overlay"></div>
+
+  <!-- ═══ Navigation ═══ -->
+  <nav class="navbar" id="main-nav">
+    <a href="index.html" class="nav-logo">THE WONDERMENT TOUR</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="venue.html">Venues</a></li>
+      <li><a href="eligibility.html">Eligibility</a></li>
+      <li><a href="tickets.html" class="active">Tickets</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+    <section class="tickets-hero">
+      <h1 class="section-title">Book Your <span class="gradient-text">Tickets</span></h1>
+      <p>Select your city, choose your tier, and secure your spot at The Wonderment Tour.</p>
+    </section>
+
+    <div class="tickets-container stagger-children">
+
+      <!-- ═══ 1. CHENNAI ═══ -->
+      <div class="ticket-card animate-fade-in-up" id="ticket-Chennai">
+        <div class="ticket-accent"></div>
+        <div class="ticket-body">
+          <div class="ticket-info">
+            <h2>Chennai</h2>
+            <div class="ticket-event-name">"Mozaic of Madras"</div>
+            <ul class="ticket-detail-list">
+              <li><span class="detail-icon">🏟️</span> Jawaharlal Nehru Stadium</li>
+              <li><span class="detail-icon">📅</span> October 10, 2026</li>
+              <li><span class="detail-icon">🕖</span> 19:30 IST</li>
+              <li><span class="detail-icon">📍</span> Chennai, India</li>
+            </ul>
+          </div>
+          <div class="ticket-pricing">
+            <h3>Ticket Prices (INR ₹)</h3>
+            <div class="price-tier vip">
+              <div class="price-tier-left">
+                <span class="price-tier-name">✨ VIP Golden Circle</span>
+                <span class="price-tier-desc">Front rows, exclusive merch, meet & greet</span>
+              </div>
+              <span class="price-tier-amount">₹8,000</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">Premium Seating</span>
+                <span class="price-tier-desc">Reserved elevated seats, great view</span>
+              </div>
+              <span class="price-tier-amount">₹3,500</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">General Admission</span>
+                <span class="price-tier-desc">Standard entry, standing/rear seating</span>
+              </div>
+              <span class="price-tier-amount">₹1,500</span>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-cta">
+          <a href="https://in.bookmyshow.com/explore/events-chennai?cat=CT" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Book on BookMyShow →</a>
+          <a href="venue.html#chennai" class="btn btn-outline">View Venue</a>
+        </div>
+      </div>
+
+      <!-- ═══ 2. MUMBAI ═══ -->
+      <div class="ticket-card animate-fade-in-up" id="ticket-Mumbai">
+        <div class="ticket-accent"></div>
+        <div class="ticket-body">
+          <div class="ticket-info">
+            <h2>Mumbai</h2>
+            <div class="ticket-event-name">"Infinite Echoes"</div>
+            <ul class="ticket-detail-list">
+              <li><span class="detail-icon">🏟️</span> D.Y Patil Stadium</li>
+              <li><span class="detail-icon">📅</span> October 24, 2026</li>
+              <li><span class="detail-icon">🕖</span> 19:30 IST</li>
+              <li><span class="detail-icon">📍</span> Mumbai, India</li>
+            </ul>
+          </div>
+          <div class="ticket-pricing">
+            <h3>Ticket Prices (INR ₹)</h3>
+            <div class="price-tier vip">
+              <div class="price-tier-left">
+                <span class="price-tier-name">✨ VIP Golden Circle</span>
+                <span class="price-tier-desc">Front rows, exclusive merch, meet & greet</span>
+              </div>
+              <span class="price-tier-amount">₹10,000</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">Premium Seating</span>
+                <span class="price-tier-desc">Reserved elevated seats, great view</span>
+              </div>
+              <span class="price-tier-amount">₹4,500</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">General Admission</span>
+                <span class="price-tier-desc">Standard entry, standing/rear seating</span>
+              </div>
+              <span class="price-tier-amount">₹2,000</span>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-cta">
+          <a href="https://in.bookmyshow.com/explore/events-mumbai?cat=CT" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Book on BookMyShow →</a>
+          <a href="venue.html#mumbai" class="btn btn-outline">View Venue</a>
+        </div>
+      </div>
+
+      <!-- ═══ 3. DUBAI ═══ -->
+      <div class="ticket-card animate-fade-in-up" id="ticket-Dubai">
+        <div class="ticket-accent"></div>
+        <div class="ticket-body">
+          <div class="ticket-info">
+            <h2>Dubai</h2>
+            <div class="ticket-event-name">"Reality of Rhythm"</div>
+            <ul class="ticket-detail-list">
+              <li><span class="detail-icon">🏟️</span> Coca-Cola Arena</li>
+              <li><span class="detail-icon">📅</span> November 4, 2026</li>
+              <li><span class="detail-icon">🕗</span> 20:00 GST</li>
+              <li><span class="detail-icon">📍</span> Dubai, UAE</li>
+            </ul>
+          </div>
+          <div class="ticket-pricing">
+            <h3>Ticket Prices (AED د.إ)</h3>
+            <div class="price-tier vip">
+              <div class="price-tier-left">
+                <span class="price-tier-name">✨ VIP Golden Circle</span>
+                <span class="price-tier-desc">Front rows, exclusive merch, meet & greet</span>
+              </div>
+              <span class="price-tier-amount">800 AED</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">Premium Seating</span>
+                <span class="price-tier-desc">Reserved elevated seats, great view</span>
+              </div>
+              <span class="price-tier-amount">350 AED</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">General Admission</span>
+                <span class="price-tier-desc">Standard entry, standing/rear seating</span>
+              </div>
+              <span class="price-tier-amount">150 AED</span>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-cta">
+          <a href="https://coca-cola-arena.com/" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Book on Coca-Cola Arena →</a>
+          <a href="venue.html#dubai" class="btn btn-outline">View Venue</a>
+        </div>
+      </div>
+
+      <!-- ═══ 4. LONDON ═══ -->
+      <div class="ticket-card animate-fade-in-up" id="ticket-London">
+        <div class="ticket-accent"></div>
+        <div class="ticket-body">
+          <div class="ticket-info">
+            <h2>London</h2>
+            <div class="ticket-event-name">"Symphony of the Soul"</div>
+            <ul class="ticket-detail-list">
+              <li><span class="detail-icon">🏟️</span> The O2 Arena</li>
+              <li><span class="detail-icon">📅</span> November 21, 2026</li>
+              <li><span class="detail-icon">🕖</span> 19:00 GMT</li>
+              <li><span class="detail-icon">📍</span> London, UK</li>
+            </ul>
+          </div>
+          <div class="ticket-pricing">
+            <h3>Ticket Prices (GBP £)</h3>
+            <div class="price-tier vip">
+              <div class="price-tier-left">
+                <span class="price-tier-name">✨ VIP Golden Circle</span>
+                <span class="price-tier-desc">Front rows, exclusive merch, meet & greet</span>
+              </div>
+              <span class="price-tier-amount">£250</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">Premium Seating</span>
+                <span class="price-tier-desc">Reserved elevated seats, great view</span>
+              </div>
+              <span class="price-tier-amount">£120</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">General Admission</span>
+                <span class="price-tier-desc">Standard entry, standing/rear seating</span>
+              </div>
+              <span class="price-tier-amount">£60</span>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-cta">
+          <a href="https://www.theo2.co.uk" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Book on The O2 →</a>
+          <a href="venue.html#london" class="btn btn-outline">View Venue</a>
+        </div>
+      </div>
+
+      <!-- ═══ 5. NEW YORK ═══ -->
+      <div class="ticket-card animate-fade-in-up" id="ticket-NewYork">
+        <div class="ticket-accent"></div>
+        <div class="ticket-body">
+          <div class="ticket-info">
+            <h2>New York</h2>
+            <div class="ticket-event-name">"A Global Sonic Experience"</div>
+            <ul class="ticket-detail-list">
+              <li><span class="detail-icon">🏟️</span> Madison Square Garden</li>
+              <li><span class="detail-icon">📅</span> December 12, 2026</li>
+              <li><span class="detail-icon">🕖</span> 19:30 EST</li>
+              <li><span class="detail-icon">📍</span> New York, USA</li>
+            </ul>
+          </div>
+          <div class="ticket-pricing">
+            <h3>Ticket Prices (USD $)</h3>
+            <div class="price-tier vip">
+              <div class="price-tier-left">
+                <span class="price-tier-name">✨ VIP Golden Circle</span>
+                <span class="price-tier-desc">Front rows, exclusive merch, meet & greet</span>
+              </div>
+              <span class="price-tier-amount">$350</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">Premium Seating</span>
+                <span class="price-tier-desc">Reserved elevated seats, great view</span>
+              </div>
+              <span class="price-tier-amount">$180</span>
+            </div>
+            <div class="price-tier">
+              <div class="price-tier-left">
+                <span class="price-tier-name">General Admission</span>
+                <span class="price-tier-desc">Standard entry, standing/rear seating</span>
+              </div>
+              <span class="price-tier-amount">$80</span>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-cta">
+          <a href="https://www.msg.com/madison-square-garden" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Book on MSG →</a>
+          <a href="venue.html#newyork" class="btn btn-outline">View Venue</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer">
+    <p>&copy; 2026 The Wonderment Tour. This is an unofficial fan project. 
+      <a href="contact.html">Disclaimer &amp; Contact</a>
+    </p>
+  </footer>
+
+  <script>
+    // Mobile nav
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+    window.addEventListener('scroll', () => {
+      document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Highlight and scroll to event from URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const eventParam = params.get('event');
+    if (eventParam) {
+      const target = document.getElementById('ticket-' + eventParam);
+      if (target) {
+        target.classList.add('highlight');
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 400);
+      }
+    }
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

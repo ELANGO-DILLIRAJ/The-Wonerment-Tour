@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Venue details for The Wonderment Tour — stadium aerial views, seating charts, timings, and directions for all 5 concert locations.">
+  <title>Venues | The Wonderment Tour</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Fixed video backdrop ── */
+    .venue-bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .venue-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        180deg,
+        rgba(5, 2, 16, 0.82) 0%,
+        rgba(5, 2, 16, 0.72) 30%,
+        rgba(5, 2, 16, 0.75) 70%,
+        rgba(5, 2, 16, 0.92) 100%
+      );
+      pointer-events: none;
+    }
+    /* All content sits above video */
+    .venue-page {
+      position: relative;
+      z-index: 2;
+    }
+
+    .venue-hero {
+      padding: 120px 40px 40px;
+      text-align: center;
+    }
+    .venue-hero p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-top: 12px;
+    }
+
+    /* ── Venue Cards ── */
+    .venues-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .venue-box {
+      border-radius: var(--card-radius-lg);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-glass);
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+    .venue-box:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 8px 48px rgba(168, 85, 247, 0.12);
+    }
+
+    .venue-header {
+      padding: 32px 36px 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .venue-header-left h2 {
+      font-family: var(--font-heading);
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .venue-header-left .venue-location {
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+    .venue-header-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Info Grid ── */
+    .venue-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border-glass);
+      margin: 0 36px;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .venue-info-item {
+      background: var(--bg-secondary);
+      padding: 20px 22px;
+    }
+    .venue-info-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .venue-info-value {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* ── Media (Images) ── */
+    .venue-media {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 24px 36px 32px;
+    }
+    .venue-media-item {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border-glass);
+      transition: all 0.3s ease;
+    }
+    .venue-media-item:hover {
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 24px rgba(168, 85, 247, 0.2);
+    }
+    .venue-media-item:hover img {
+      transform: scale(1.05);
+    }
+    .venue-media-item img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .venue-media-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 14px;
+      background: linear-gradient(0deg, rgba(0,0,0,0.8), transparent);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── CTA row at bottom of card ── */
+    .venue-actions {
+      padding: 0 36px 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+      .venue-hero {
+        padding: 100px 20px 30px;
+      }
+      .venues-container {
+        padding: 10px 16px 60px;
+      }
+      .venue-header, .venue-media, .venue-actions {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .venue-info {
+        margin: 0 20px;
+        grid-template-columns: 1fr;
+      }
+      .venue-media {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Background Video ═══ -->
+  <video class="venue-bg-video" autoplay loop muted playsinline>
+    <source src="Venue/videoplayback.mp4" type="video/mp4">
+  </video>
+  <div class="venue-overlay"></div>
+
+  <!-- ═══ Navigation ═══ -->
+  <nav class="navbar" id="main-nav">
+    <a href="index.html" class="nav-logo">THE WONDERMENT TOUR</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="venue.html" class="active">Venues</a></li>
+      <li><a href="eligibility.html">Eligibility</a></li>
+      <li><a href="tickets.html">Tickets</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="venue-page page-wrapper">
+    <section class="venue-hero">
+      <h1 class="section-title">Our <span class="gradient-text">Venues</span></h1>
+      <p>Explore the iconic stadiums and arenas hosting The Wonderment Tour.</p>
+    </section>
+
+    <div class="venues-container stagger-children">
+
+      <!-- ═══ 1. CHENNAI ═══ -->
+      <div class="venue-box animate-fade-in-up" id="chennai">
+        <div class="venue-header">
+          <div class="venue-header-left">
+            <h2>Jawaharlal Nehru Stadium</h2>
+            <div class="venue-location">📍 Chennai, India</div>
+          </div>
+          <div class="venue-header-right">
+            <a href="https://www.google.com/maps/place/Jawaharlal+Nehru+Stadium/@13.0855653,80.2691533,17z/data=!3m1!4b1!4m6!3m5!1s0x3a5265fbe6a909ab:0x5a6046dfc9f0d784!8m2!3d13.0855653!4d80.2717282!16zL20vMDc4YzV5?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:8px 16px; font-size:0.82rem;">
+              📌 View on Maps
+            </a>
+          </div>
+        </div>
+        <div class="venue-info">
+          <div class="venue-info-item">
+            <div class="venue-info-label">Event Date</div>
+            <div class="venue-info-value">October 10, 2026</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Show Time</div>
+            <div class="venue-info-value">19:30 IST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Gates Open</div>
+            <div class="venue-info-value">17:00 IST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Capacity</div>
+            <div class="venue-info-value">40,000</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Contact</div>
+            <div class="venue-info-value">+91 44 2345 6789</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Email</div>
+            <div class="venue-info-value" style="font-size:0.82rem;">info@jnstadium.in</div>
+          </div>
+        </div>
+        <div class="venue-media">
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/Jawaharlal Nehru stadium aerial view.jpg" alt="Jawaharlal Nehru Stadium aerial view">
+            <div class="venue-media-label">🔍 Aerial View — Click to enlarge</div>
+          </div>
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/Jawaharlal Nehru stadium block diagram.jpg" alt="Jawaharlal Nehru Stadium block diagram">
+            <div class="venue-media-label">🔍 Seating Chart — Click to enlarge</div>
+          </div>
+        </div>
+        <div class="venue-actions">
+          <a href="tickets.html?event=Chennai" class="btn btn-primary">Book Tickets — Chennai</a>
+        </div>
+      </div>
+
+      <!-- ═══ 2. MUMBAI ═══ -->
+      <div class="venue-box animate-fade-in-up" id="mumbai">
+        <div class="venue-header">
+          <div class="venue-header-left">
+            <h2>D.Y. Patil Stadium</h2>
+            <div class="venue-location">📍 Mumbai, India</div>
+          </div>
+          <div class="venue-header-right">
+            <a href="https://www.google.com/maps/place/Dr+D.Y.Patil+Stadium/@19.0423934,73.0239322,17z/data=!3m1!4b1!4m6!3m5!1s0x3be7c3c53b1e255b:0x3fa8b73a42118233!8m2!3d19.0423934!4d73.0265071!16s%2Fm%2F0263rsl?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:8px 16px; font-size:0.82rem;">
+              📌 View on Maps
+            </a>
+          </div>
+        </div>
+        <div class="venue-info">
+          <div class="venue-info-item">
+            <div class="venue-info-label">Event Date</div>
+            <div class="venue-info-value">October 24, 2026</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Show Time</div>
+            <div class="venue-info-value">19:30 IST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Gates Open</div>
+            <div class="venue-info-value">17:00 IST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Capacity</div>
+            <div class="venue-info-value">55,000</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Contact</div>
+            <div class="venue-info-value">+91 22 2756 1234</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Email</div>
+            <div class="venue-info-value" style="font-size:0.82rem;">info@dypatilstadium.com</div>
+          </div>
+        </div>
+        <div class="venue-media">
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/dy-patil-stadium-navi-mumbai aerial view.jpg" alt="D.Y. Patil Stadium aerial view">
+            <div class="venue-media-label">🔍 Aerial View — Click to enlarge</div>
+          </div>
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/dy-patil-stadium-navi-mumbai block diagram.jpg" alt="D.Y. Patil Stadium block diagram">
+            <div class="venue-media-label">🔍 Seating Chart — Click to enlarge</div>
+          </div>
+        </div>
+        <div class="venue-actions">
+          <a href="tickets.html?event=Mumbai" class="btn btn-primary">Book Tickets — Mumbai</a>
+        </div>
+      </div>
+
+      <!-- ═══ 3. DUBAI ═══ -->
+      <div class="venue-box animate-fade-in-up" id="dubai">
+        <div class="venue-header">
+          <div class="venue-header-left">
+            <h2>Coca-Cola Arena</h2>
+            <div class="venue-location">📍 Dubai, UAE</div>
+          </div>
+          <div class="venue-header-right">
+            <a href="https://www.google.com/maps/place/Coca-Cola+Arena/@25.2037509,55.2635888,17z/data=!4m10!1m2!2m1!1scoca+cola+arena!3m6!1s0x3e5f43db141ff4fd:0xd3ce726c8458af4c!8m2!3d25.2043102!4d55.2653822!15sCg9jb2NhIGNvbGEgYXJlbmFaESIPY29jYSBjb2xhIGFyZW5hkgEFYXJlbmHgAQA!16s%2Fg%2F11fl7q5rsc?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:8px 16px; font-size:0.82rem;">
+              📌 View on Maps
+            </a>
+          </div>
+        </div>
+        <div class="venue-info">
+          <div class="venue-info-item">
+            <div class="venue-info-label">Event Date</div>
+            <div class="venue-info-value">November 4, 2026</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Show Time</div>
+            <div class="venue-info-value">20:00 GST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Gates Open</div>
+            <div class="venue-info-value">18:00 GST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Capacity</div>
+            <div class="venue-info-value">17,000</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Contact</div>
+            <div class="venue-info-value">+971 4 200 4567</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Email</div>
+            <div class="venue-info-value" style="font-size:0.82rem;">info@coca-cola-arena.com</div>
+          </div>
+        </div>
+        <div class="venue-media">
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/Coco-Cola Arena aerial view.jpg" alt="Coca-Cola Arena aerial view">
+            <div class="venue-media-label">🔍 Aerial View — Click to enlarge</div>
+          </div>
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/Coco-Cola Arena block diagram.jpg" alt="Coca-Cola Arena block diagram">
+            <div class="venue-media-label">🔍 Seating Chart — Click to enlarge</div>
+          </div>
+        </div>
+        <div class="venue-actions">
+          <a href="tickets.html?event=Dubai" class="btn btn-primary">Book Tickets — Dubai</a>
+        </div>
+      </div>
+
+      <!-- ═══ 4. LONDON ═══ -->
+      <div class="venue-box animate-fade-in-up" id="london">
+        <div class="venue-header">
+          <div class="venue-header-left">
+            <h2>The O2 Arena</h2>
+            <div class="venue-location">📍 London, United Kingdom</div>
+          </div>
+          <div class="venue-header-right">
+            <a href="https://www.google.com/maps/place/The+O2/@51.5029456,0.0006511,17z/data=!3m1!5s0x47d8a81ce55fb6cf:0xd17024fbebc06a05!4m10!1m2!2m1!1sthe+o2+arena!3m6!1s0x47d8a81c5507b387:0x981ded0cf3b9dadf!8m2!3d51.503038!4d0.0031543!15sCgx0aGUgbzIgYXJlbmFaDiIMdGhlIG8yIGFyZW5hkgEQbGl2ZV9tdXNpY192ZW51ZeABAA!16s%2Fm%2F047t9qn?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:8px 16px; font-size:0.82rem;">
+              📌 View on Maps
+            </a>
+          </div>
+        </div>
+        <div class="venue-info">
+          <div class="venue-info-item">
+            <div class="venue-info-label">Event Date</div>
+            <div class="venue-info-value">November 21, 2026</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Show Time</div>
+            <div class="venue-info-value">19:00 GMT</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Gates Open</div>
+            <div class="venue-info-value">17:00 GMT</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Capacity</div>
+            <div class="venue-info-value">20,000</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Contact</div>
+            <div class="venue-info-value">+44 20 8463 2000</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Email</div>
+            <div class="venue-info-value" style="font-size:0.82rem;">info@theo2.co.uk</div>
+          </div>
+        </div>
+        <div class="venue-media">
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/The O2 arena aerial view.png" alt="The O2 Arena aerial view">
+            <div class="venue-media-label">🔍 Aerial View — Click to enlarge</div>
+          </div>
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/The O2 arena block diagram.jpg" alt="The O2 Arena block diagram">
+            <div class="venue-media-label">🔍 Seating Chart — Click to enlarge</div>
+          </div>
+        </div>
+        <div class="venue-actions">
+          <a href="tickets.html?event=London" class="btn btn-primary">Book Tickets — London</a>
+        </div>
+      </div>
+
+      <!-- ═══ 5. NEW YORK ═══ -->
+      <div class="venue-box animate-fade-in-up" id="newyork">
+        <div class="venue-header">
+          <div class="venue-header-left">
+            <h2>Madison Square Garden</h2>
+            <div class="venue-location">📍 New York, United States</div>
+          </div>
+          <div class="venue-header-right">
+            <a href="https://www.google.com/maps/place/Madison+Square+Garden/@40.7505045,-73.9960136,17z/data=!3m1!4b1!4m6!3m5!1s0x89c25a21fb011c85:0x33df10e49762f8e4!8m2!3d40.7505045!4d-73.9934387!16zL20vMGpfNjY?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:8px 16px; font-size:0.82rem;">
+              📌 View on Maps
+            </a>
+          </div>
+        </div>
+        <div class="venue-info">
+          <div class="venue-info-item">
+            <div class="venue-info-label">Event Date</div>
+            <div class="venue-info-value">December 12, 2026</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Show Time</div>
+            <div class="venue-info-value">19:30 EST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Gates Open</div>
+            <div class="venue-info-value">17:30 EST</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Capacity</div>
+            <div class="venue-info-value">20,789</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Contact</div>
+            <div class="venue-info-value">+1 212-465-6741</div>
+          </div>
+          <div class="venue-info-item">
+            <div class="venue-info-label">Email</div>
+            <div class="venue-info-value" style="font-size:0.82rem;">info@msg.com</div>
+          </div>
+        </div>
+        <div class="venue-media">
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/Madison Sqaure garden aerial view.png" alt="Madison Square Garden aerial view">
+            <div class="venue-media-label">🔍 Aerial View — Click to enlarge</div>
+          </div>
+          <div class="venue-media-item" onclick="openLightbox(this)">
+            <img src="Venue/Madison Sqaure garden block diagram.webp" alt="Madison Square Garden block diagram">
+            <div class="venue-media-label">🔍 Seating Chart — Click to enlarge</div>
+          </div>
+        </div>
+        <div class="venue-actions">
+          <a href="tickets.html?event=NewYork" class="btn btn-primary">Book Tickets — New York</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ Lightbox Modal ═══ -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close">&times;</button>
+    <img id="lightbox-img" src="" alt="Enlarged venue image">
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer" style="position: relative; z-index: 2;">
+    <p>&copy; 2026 The Wonderment Tour. This is an unofficial fan project. 
+      <a href="contact.html">Disclaimer &amp; Contact</a>
+    </p>
+  </footer>
+
+  <script>
+    // Mobile nav
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+    window.addEventListener('scroll', () => {
+      document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Lightbox
+    const overlay = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+
+    function openLightbox(el) {
+      const img = el.querySelector('img');
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeLightbox(); });
+    function closeLightbox() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+      observer.observe(el);
+    });
+
+    // Auto-scroll to hash if present
+    if (window.location.hash) {
+      setTimeout(() => {
+        const target = document.querySelector(window.location.hash);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 400);
+    }
+  </script>
+</body>
+</html>

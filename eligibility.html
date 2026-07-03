@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Eligibility requirements, prohibited items, and rules for attending The Wonderment Tour concerts.">
+  <title>Eligibility & Rules | The Wonderment Tour</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Fixed Backdrop ── */
+    .eligibility-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+    .eligibility-backdrop img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.6;
+    }
+    .eligibility-backdrop-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(
+        180deg,
+        rgba(5, 2, 16, 0.88) 0%,
+        rgba(5, 2, 16, 0.80) 40%,
+        rgba(5, 2, 16, 0.90) 100%
+      );
+      backdrop-filter: blur(2px);
+    }
+
+    .page-wrapper {
+      position: relative;
+      z-index: 2;
+    }
+
+    .elig-hero {
+      padding: 120px 40px 40px;
+      text-align: center;
+    }
+
+    .elig-hero p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-top: 12px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .elig-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    /* ── Rule Block ── */
+    .rule-block {
+      border-radius: var(--card-radius);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .rule-block:hover {
+      border-color: var(--border-glow);
+    }
+
+    .rule-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 28px 32px 0;
+    }
+
+    .rule-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .rule-icon.age {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+    }
+
+    .rule-icon.health {
+      background: linear-gradient(135deg, #ef4444, #ec4899);
+    }
+
+    .rule-icon.prohibited {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .rule-icon.laws {
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+    }
+
+    .rule-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .rule-body {
+      padding: 20px 32px 32px;
+    }
+
+    .rule-body p {
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .rule-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .rule-list li .bullet {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      margin-top: 2px;
+    }
+
+    .rule-list li .rule-text {
+      flex: 1;
+    }
+
+    .bullet-warn {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+    }
+
+    .bullet-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .bullet-info {
+      background: rgba(99, 102, 241, 0.15);
+      color: #6366f1;
+    }
+
+    /* ── Prohibited Items Grid ── */
+    .prohibited-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .prohibited-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: rgba(239, 68, 68, 0.06);
+      border: 1px solid rgba(239, 68, 68, 0.12);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .prohibited-item:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .prohibited-item span.icon {
+      font-size: 1.2rem;
+    }
+
+    /* ── Country Rules Tabs ── */
+    .country-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .country-tab {
+      padding: 8px 18px;
+      border-radius: 10px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      color: var(--text-secondary);
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .country-tab.active,
+    .country-tab:hover {
+      background: var(--bg-glass-strong);
+      border-color: var(--accent-purple);
+      color: var(--text-primary);
+    }
+
+    .country-rule-panel {
+      display: none;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      padding: 20px;
+      background: rgba(99, 102, 241, 0.04);
+      border-radius: 14px;
+      border: 1px solid rgba(99, 102, 241, 0.1);
+    }
+
+    .country-rule-panel.active {
+      display: block;
+    }
+
+    .country-rule-panel h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .country-rule-panel ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .country-rule-panel ul li {
+      padding: 4px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .country-rule-panel ul li::before {
+      content: '•';
+      position: absolute;
+      left: 4px;
+      color: var(--accent-cyan);
+    }
+
+    /* ── Bottom Navigation ── */
+    .elig-nav {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+
+    .elig-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .elig-nav-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      border-radius: var(--card-radius);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      text-align: center;
+      transition: all 0.4s ease;
+      text-decoration: none;
+    }
+
+    .elig-nav-card:hover {
+      border-color: var(--border-glow);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-4px);
+    }
+
+    .elig-nav-card .nav-card-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .elig-nav-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .elig-nav-card p {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 700px) {
+      .elig-hero {
+        padding: 100px 20px 30px;
+      }
+
+      .elig-container,
+      .elig-nav {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .rule-header,
+      .rule-body {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .prohibited-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ Fixed Backdrop ═══ -->
+  <div class="eligibility-backdrop">
+    <img src="home/neon_ar_rahman_bg.png" alt="Neon Musical Outline Background" aria-hidden="true">
+  </div>
+  <div class="eligibility-backdrop-overlay"></div>
+
+  <!-- ═══ Navigation ═══ -->
+  <nav class="navbar" id="main-nav">
+    <a href="index.html" class="nav-logo">THE WONDERMENT TOUR</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="venue.html">Venues</a></li>
+      <li><a href="eligibility.html" class="active">Eligibility</a></li>
+      <li><a href="tickets.html">Tickets</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+    <section class="elig-hero">
+      <h1 class="section-title">Eligibility & <span class="gradient-text">Rules</span></h1>
+      <p>Please read the following guidelines carefully before booking your tickets. Your safety and comfort are our
+        priority.</p>
+    </section>
+
+    <div class="elig-container stagger-children">
+
+      <!-- ═══ Age Requirements ═══ -->
+      <div class="rule-block animate-fade-in-up">
+        <div class="rule-header">
+          <div class="rule-icon age">👤</div>
+          <h2>Age Requirements</h2>
+        </div>
+        <div class="rule-body">
+          <p>To ensure the safety and enjoyment of all attendees, the following age restrictions apply:</p>
+          <ul class="rule-list">
+            <li>
+              <span class="bullet bullet-warn">!</span>
+              <span class="rule-text">Attendees must be <strong>16 years or older</strong> for General Admission (standing zones).</span>
+            </li>
+            <li>
+              <span class="bullet bullet-warn">!</span>
+              <span class="rule-text">Children aged <strong>6–15</strong> may attend seated sections only and <strong>must be accompanied by an adult</strong> (18+) at all times.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-danger">✕</span>
+              <span class="rule-text"><strong>No children under 5 years old</strong> are permitted due to high sound levels (100dB+) and pyrotechnic effects.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-info">i</span>
+              <span class="rule-text">Valid government-issued photo ID with date of birth is required at the entrance for age verification.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-info">i</span>
+              <span class="rule-text">Infants and toddlers will be denied entry without exception, regardless of ticket purchase.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ═══ Medical & Health ═══ -->
+      <div class="rule-block animate-fade-in-up">
+        <div class="rule-header">
+          <div class="rule-icon health">🏥</div>
+          <h2>Medical & Health Advisory</h2>
+        </div>
+        <div class="rule-body">
+          <p>The Wonderment Tour features high-energy production elements. Please consider the following health
+            advisories:</p>
+          <ul class="rule-list">
+            <li>
+              <span class="bullet bullet-danger">⚡</span>
+              <span class="rule-text"><strong>Strobe lighting and lasers</strong> will be used extensively. Attendees with <strong>epilepsy or photosensitive conditions</strong> should consult a physician before attending.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-danger">♥</span>
+              <span class="rule-text">Guests with <strong>pacemakers or heart conditions</strong> are advised to avoid front-row and speaker-adjacent zones due to extreme bass frequencies.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-warn">!</span>
+              <span class="rule-text"><strong>Pregnant attendees</strong> are recommended to use seated sections and avoid standing-only zones.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-warn">!</span>
+              <span class="rule-text">Sound levels may exceed <strong>100 dB</strong>. Complimentary earplugs are available at all venue information desks.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-info">+</span>
+              <span class="rule-text"><strong>First aid stations</strong> will be available inside all venues. On-site paramedics will be on standby throughout the event.</span>
+            </li>
+            <li>
+              <span class="bullet bullet-info">i</span>
+              <span class="rule-text">Attendees requiring wheelchair accessibility or special seating arrangements should contact the venue directly at least <strong>48 hours</strong> before the event.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ═══ Prohibited Items ═══ -->
+      <div class="rule-block animate-fade-in-up">
+        <div class="rule-header">
+          <div class="rule-icon prohibited">🚫</div>
+          <h2>Prohibited Items</h2>
+        </div>
+        <div class="rule-body">
+          <p>The following items are strictly prohibited inside all concert venues. Security checks will be enforced at
+            every entry point.</p>
+          <div class="prohibited-grid">
+            <div class="prohibited-item"><span class="icon">⚒️</span> Weapons of any kind</div>
+            <div class="prohibited-item"><span class="icon">🔪</span> Sharp objects & knives</div>
+            <div class="prohibited-item"><span class="icon">📷</span> Professional cameras</div>
+            <div class="prohibited-item"><span class="icon">🎥</span> Recording equipment</div>
+            <div class="prohibited-item"><span class="icon">🧨</span> Fireworks & flares</div>
+            <div class="prohibited-item"><span class="icon">🍺</span> Outside food & drinks</div>
+            <div class="prohibited-item"><span class="icon">🎒</span> Backpacks (>A4 size)</div>
+            <div class="prohibited-item"><span class="icon">🤳</span> Selfie sticks</div>
+            <div class="prohibited-item"><span class="icon">💡</span> Laser pointers</div>
+            <div class="prohibited-item"><span class="icon">🏳️</span> Large banners & flags</div>
+            <div class="prohibited-item"><span class="icon">🪑</span> Folding chairs</div>
+            <div class="prohibited-item"><span class="icon">🐕</span> Pets (except service)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ Country & Venue Regulations ═══ -->
+      <div class="rule-block animate-fade-in-up">
+        <div class="rule-header">
+          <div class="rule-icon laws">⚖️</div>
+          <h2>Venue & Country Regulations</h2>
+        </div>
+        <div class="rule-body">
+          <p>Each venue operates under its country's local laws. Please familiarize yourself with the regulations for
+            your chosen event location:</p>
+          <div class="country-tabs" id="country-tabs">
+            <button class="country-tab active" data-panel="india">🇮🇳 India (Chennai & Mumbai)</button>
+            <button class="country-tab" data-panel="uae">🇦🇪 UAE (Dubai)</button>
+            <button class="country-tab" data-panel="uk">🇬🇧 UK (London)</button>
+            <button class="country-tab" data-panel="usa">🇺🇸 USA (New York)</button>
+          </div>
+
+          <div class="country-rule-panel active" id="panel-india">
+            <h4>🇮🇳 India — Chennai & Mumbai</h4>
+            <ul>
+              <li>Alcohol consumption is permitted only within designated licensed zones inside the venue.</li>
+              <li>Smoking and vaping are strictly prohibited inside the stadium premises as per Indian law.</li>
+              <li>Events must adhere to noise regulations; the show will conclude by 22:30 IST.</li>
+              <li>Aadhaar Card or Passport is accepted as valid photo ID for entry.</li>
+              <li>Public intoxication may result in immediate removal from the venue.</li>
+            </ul>
+          </div>
+          <div class="country-rule-panel" id="panel-uae">
+            <h4>🇦🇪 United Arab Emirates — Dubai</h4>
+            <ul>
+              <li>Alcohol is available only in designated licensed areas within Coca-Cola Arena.</li>
+              <li>Modest dress code is recommended; offensive clothing or slogans are not permitted.</li>
+              <li>Photography for personal use is allowed; commercial recording is prohibited.</li>
+              <li>Attendees must carry their Emirates ID or Passport for security verification.</li>
+              <li>Public displays of affection should be kept to a minimum in accordance with local customs.</li>
+              <li>Narcotics and controlled substances carry severe legal penalties under UAE law.</li>
+            </ul>
+          </div>
+          <div class="country-rule-panel" id="panel-uk">
+            <h4>🇬🇧 United Kingdom — London</h4>
+            <ul>
+              <li>The O2 Arena is a smoke-free venue. Smoking is only permitted in designated outdoor areas.</li>
+              <li>Challenge 25 policy: anyone appearing under 25 will be asked for ID when purchasing alcohol.</li>
+              <li>Anti-social behavior, including standing on seats, may result in ejection without refund.</li>
+              <li>Bag searches are conducted at entry. Only small bags (A4 size or smaller) are allowed.</li>
+              <li>UK driving licence or Passport is accepted for age verification.</li>
+            </ul>
+          </div>
+          <div class="country-rule-panel" id="panel-usa">
+            <h4>🇺🇸 United States — New York</h4>
+            <ul>
+              <li>Legal drinking age is 21. Valid state-issued ID or Passport is required for alcohol purchases.</li>
+              <li>Madison Square Garden is a smoke-free facility. No smoking, vaping, or e-cigarettes inside.</li>
+              <li>All attendees are subject to security screening, including metal detectors and bag inspections.</li>
+              <li>Re-entry is not permitted. Once you leave the venue, your ticket is void.</li>
+              <li>ADA-compliant accessible seating is available; contact the box office for accommodations.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Bottom Navigation Buttons ═══ -->
+    <div class="elig-nav">
+      <div class="section-header" style="margin-bottom: 32px;">
+        <h2 class="section-title" style="font-size:1.6rem;">Ready to <span class="gradient-text">Proceed?</span></h2>
+      </div>
+      <div class="elig-nav-grid">
+        <a href="events.html" class="elig-nav-card">
+          <div class="nav-card-icon">📅</div>
+          <h3>View Events Timeline</h3>
+          <p>Explore the 5 tour dates</p>
+        </a>
+        <a href="venue.html" class="elig-nav-card">
+          <div class="nav-card-icon">🏟️</div>
+          <h3>View Venue & Seating</h3>
+          <p>Stadium details and maps</p>
+        </a>
+        <a href="tickets.html" class="elig-nav-card">
+          <div class="nav-card-icon">🎟️</div>
+          <h3>Book Tickets Now</h3>
+          <p>Secure your seats today</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer">
+    <p>&copy; 2026 The Wonderment Tour. This is an unofficial fan project.
+      <a href="contact.html">Disclaimer &amp; Contact</a>
+    </p>
+  </footer>
+
+  <script>
+    // Mobile nav
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+    window.addEventListener('scroll', () => {
+      document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Country regulation tabs
+    document.querySelectorAll('.country-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.country-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.country-rule-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+      });
+    });
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+
+</html>

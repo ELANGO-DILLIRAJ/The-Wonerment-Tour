@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="The Wonderment Tour — A.R. Rahman Live. Experience the magic of music across 5 global cities in 2026.">
+  <title>The Wonderment Tour | A.R. Rahman Live</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── Intro Splash Section ── */
+    .intro-splash {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 40px 60px;
+      background: radial-gradient(ellipse at 50% 30%, rgba(168, 85, 247, 0.08) 0%, var(--bg-primary) 70%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle animated glow behind image */
+    .intro-splash::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.12), transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      animation: pulse 5s ease-in-out infinite;
+    }
+
+    .intro-image {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      width: 100%;
+      margin-bottom: 48px;
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    .intro-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      filter: drop-shadow(0 8px 40px rgba(168, 85, 247, 0.2));
+    }
+
+    .typewriter-container {
+      position: relative;
+      z-index: 1;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .typewriter-line {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid var(--accent-purple);
+      width: 0;
+    }
+
+    .typewriter-line.line-1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+    }
+
+    .typewriter-line.line-2 {
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      color: var(--accent-gold);
+    }
+
+    .typewriter-line.line-3 {
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      color: var(--accent-purple);
+    }
+
+    .typewriter-line.typing {
+      animation: blinkCaret 0.6s step-end infinite;
+    }
+
+    .typewriter-line.done {
+      border-right-color: transparent;
+    }
+
+    @keyframes blinkCaret {
+      50% {
+        border-right-color: transparent;
+      }
+    }
+
+    /* Scroll indicator */
+    .scroll-down {
+      position: relative;
+      z-index: 1;
+      margin-top: 48px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .scroll-down a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .scroll-down a:hover {
+      color: var(--accent-purple);
+    }
+
+    .scroll-arrow {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .intro-splash {
+        padding: 90px 20px 40px;
+      }
+
+      .typewriter-line {
+        white-space: normal;
+        text-align: center;
+      }
+    }
+
+    /* ── Odyssey Intro Section ── */
+    .odyssey-intro {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      gap: 60px;
+    }
+
+    .odyssey-image {
+      flex: 1;
+      max-width: 550px;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-glow), var(--shadow-card);
+      border: 1px solid var(--border-glass);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .odyssey-image:hover {
+      transform: scale(1.02);
+      border-color: var(--accent-purple);
+    }
+
+    .odyssey-image img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .odyssey-content {
+      flex: 1.2;
+    }
+
+    .odyssey-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .odyssey-text {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .odyssey-text p {
+      margin-bottom: 20px;
+    }
+
+    .odyssey-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+      .odyssey-intro {
+        flex-direction: column;
+        padding: 60px 20px;
+        gap: 40px;
+        text-align: center;
+      }
+
+      .odyssey-image {
+        max-width: 100%;
+      }
+    }
+
+    /* ── Hero Video (clean, no overlay) ── */
+    .hero-video-section {
+      width: 100%;
+      line-height: 0;
+      background: #000;
+      position: relative;
+    }
+
+    .hero-video-section video {
+      width: 100%;
+      max-height: 90vh;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Unmute toggle button */
+    .video-sound-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 24px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(10, 5, 32, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: 50px;
+      color: #fff;
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.03em;
+    }
+
+    .video-sound-btn:hover {
+      background: rgba(168, 85, 247, 0.3);
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .video-sound-btn .sound-icon {
+      font-size: 1.1rem;
+    }
+
+    /* ── Hero Details (below video) ── */
+    .hero-details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      gap: 60px;
+    }
+
+    .hero-text {
+      flex: 1;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--accent-gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      animation: pulse 3s ease infinite;
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .hero-title .highlight {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-image {
+      flex: 0 0 360px;
+      animation: fadeIn 1.2s ease 0.3s forwards;
+      opacity: 0;
+    }
+
+    .hero-image img {
+      width: 100%;
+      filter: drop-shadow(0 0 60px rgba(168, 85, 247, 0.3));
+      animation: float 5s ease-in-out infinite;
+    }
+
+    /* ── Madras to Global Section ── */
+    .madras-global-section {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      gap: 60px;
+    }
+
+    .madras-image {
+      flex: 1;
+      max-width: 550px;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-glow), var(--shadow-card);
+      border: 1px solid var(--border-glass);
+      position: sticky;
+      top: 100px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .madras-image:hover {
+      transform: scale(1.02);
+      border-color: var(--accent-purple);
+    }
+
+    .madras-image img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .madras-content {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .madras-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      padding: 28px;
+      border-radius: var(--card-radius);
+      transition: all 0.3s ease;
+    }
+
+    .madras-block:hover {
+      border-color: var(--border-glow);
+      background: var(--bg-card-hover);
+      box-shadow: var(--shadow-glow);
+      transform: translateX(5px);
+    }
+
+    .madras-block-title {
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .madras-block-text {
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      line-height: 1.75;
+    }
+
+    @media (max-width: 900px) {
+      .madras-global-section {
+        flex-direction: column;
+        padding: 60px 20px;
+        gap: 40px;
+      }
+
+      .madras-image {
+        max-width: 100%;
+        position: relative;
+        top: 0;
+      }
+
+      .madras-block:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    /* ── Tour Dates Preview ── */
+    .tour-preview {
+      padding: 100px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .tour-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .tour-card {
+      padding: 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tour-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .tour-card:hover::before {
+      opacity: 1;
+    }
+
+    .tour-city {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .tour-date {
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .tour-venue-name {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    /* ── Collage Section ── */
+    .collage-section {
+      position: relative;
+      padding: 80px 0;
+      overflow: hidden;
+    }
+
+    .collage-section img {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      opacity: 0.6;
+    }
+
+    .collage-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg,
+          var(--bg-primary) 0%,
+          rgba(5, 2, 16, 0.4) 40%,
+          rgba(5, 2, 16, 0.4) 60%,
+          var(--bg-primary) 100%);
+    }
+
+    .collage-text {
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .collage-text .section-title {
+      margin-bottom: 20px;
+    }
+
+    /* ── Experience Section ── */
+    .experience-section {
+      padding: 100px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .exp-card {
+      padding: 36px 28px;
+      position: relative;
+    }
+
+    .exp-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .exp-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .exp-card p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+
+    /* ── CTA Banner ── */
+    .cta-banner {
+      margin: 40px;
+      padding: 60px 40px;
+      border-radius: var(--card-radius-lg);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.1));
+      border: 1px solid var(--border-glow);
+      text-align: center;
+      max-width: 1320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-banner .section-title {
+      margin-bottom: 12px;
+    }
+
+    .cta-banner p {
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-content {
+        flex-direction: column-reverse;
+        padding: 120px 20px 60px;
+        text-align: center;
+        gap: 40px;
+      }
+
+      .hero-image {
+        flex: 0 0 auto;
+        max-width: 260px;
+      }
+
+      .hero-subtitle {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-details {
+        flex-direction: column-reverse;
+        padding: 60px 20px;
+        text-align: center;
+        gap: 32px;
+      }
+
+      .hero-image {
+        flex: 0 0 auto;
+        max-width: 260px;
+      }
+
+      .hero-subtitle {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .tour-preview,
+      .experience-section {
+        padding: 60px 20px;
+      }
+
+      .cta-banner {
+        margin: 20px;
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ Navigation ═══ -->
+  <nav class="navbar" id="main-nav">
+    <a href="index.html" class="nav-logo">THE WONDERMENT TOUR</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="venue.html">Venues</a></li>
+      <li><a href="eligibility.html">Eligibility</a></li>
+      <li><a href="tickets.html">Tickets</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- ═══ Intro Splash ═══ -->
+    <section class="intro-splash" id="intro">
+      <div class="intro-image">
+        <img src="home/title.webp" alt="A.R. Rahman Live — The Concert Experience">
+      </div>
+      <div class="typewriter-container">
+        <div class="typewriter-line line-1" id="tw-line-1"></div>
+        <div class="typewriter-line line-2" id="tw-line-2"></div>
+        <div class="typewriter-line line-3" id="tw-line-3"></div>
+      </div>
+      <div class="scroll-down">
+        <a href="#odyssey-intro">
+          <span>Scroll Down</span>
+          <span class="scroll-arrow">↓</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ Odyssey Intro Section ═══ -->
+    <section class="odyssey-intro" id="odyssey-intro">
+      <div class="odyssey-image animate-fade-in-up">
+        <img src="home/photo2.png" alt="A.R. Rahman - A Symphony of the Soul">
+      </div>
+      <div class="odyssey-content animate-fade-in-up" style="transition-delay: 0.15s;">
+        <h2 class="odyssey-title"><span class="gradient-text">A Symphony of the Soul</span></h2>
+        <div class="odyssey-text">
+          <p>For over three decades, the music of A.R. Rahman has crossed boundaries, shaped cinematic history, and
+            served as the soundtrack to countless lives. In the autumn of 2026, the maestro embarks on his most
+            ambitious live venture yet—The Wonderment Tour: Global Odyssey.</p>
+          <p>This is not merely a concert series; it is a masterfully curated sonic landscape that weaves together human
+            emotion, state-of-the-art live audio engineering, and timeless compositions into a seamless,
+            boundary-pushing performance. From the quietest spiritual notes to thunderous stadium anthems, the Global
+            Odyssey is designed to be an immersive, full-sensory experience that lingers long after the final applause.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Hero Video (clean playback) ═══ -->
+    <section class="hero-video-section" id="hero">
+      <video id="hero-video" autoplay loop muted playsinline>
+        <source src="home/Video 1.mp4" type="video/mp4">
+      </video>
+      <button class="video-sound-btn" id="sound-toggle" onclick="toggleSound()">
+        <span class="sound-icon" id="sound-icon">🔇</span>
+        <span id="sound-label">Tap to Unmute</span>
+      </button>
+    </section>
+
+    <!-- ═══ Hero Details (below video) ═══ -->
+    <div class="hero-details">
+      <div class="hero-text">
+        <span class="hero-tag">🎵 World Tour 2026</span>
+        <h1 class="hero-title">
+          The<br><span class="highlight">Wonderment</span><br>Tour
+        </h1>
+        <p class="hero-subtitle">
+          A.R. Rahman takes the stage across 5 iconic cities worldwide.
+          Experience the magic of an Oscar, Grammy &amp; National Award-winning maestro — live.
+        </p>
+        <div class="hero-buttons">
+          <a href="events.html" class="btn btn-primary">Explore Events</a>
+          <a href="tickets.html" class="btn btn-outline">Book Tickets</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="home/image_1_cropped.png" alt="A.R. Rahman">
+      </div>
+    </div>
+
+    <!-- ═══ Madras to Global Stage ═══ -->
+    <section class="madras-global-section" id="madras-global">
+      <div class="madras-image animate-fade-in-up">
+        <img src="home/photo3.jpg" alt="A.R. Rahman - From Madras to the World Stage">
+      </div>
+      <div class="madras-content">
+        <div class="madras-block animate-fade-in-up">
+          <h3 class="madras-block-title">From the Mozaic of Madras to the Global Stage</h3>
+          <p class="madras-block-text">The journey begins at the roots. The tour honors its foundations in Chennai and
+            Mumbai, channeling the raw energy, cinematic grandness, and foundational rhythms that birthed a global icon.
+            This opening act pays tribute to the rich cultural tapestry that started it all, celebrating the early
+            milestones that paved the way for international acclaim.</p>
+        </div>
+        <div class="madras-block animate-fade-in-up" style="transition-delay: 0.1s;">
+          <h3 class="madras-block-title">Infinite Echoes Across Continents</h3>
+          <p class="madras-block-text">As the odyssey crosses borders into Dubai, London, and New York, the music
+            transforms. Witness a global fusion where eastern classical orchestration perfectly collides with modern
+            electronic soundscapes. Every arena becomes a sanctuary of sound, echoing familiar cinematic anthems
+            rewritten exclusively for this tour's massive live orchestra.</p>
+        </div>
+        <div class="madras-block animate-fade-in-up" style="transition-delay: 0.2s;">
+          <h3 class="madras-block-title">Rhythms of Reality: A Sonic Experience</h3>
+          <p class="madras-block-text">Step into a space where sound and sight blur. Leveraging cutting-edge acoustic
+            design and minimalist visual engineering, the stadium configurations ensure that every ticket holder is
+            enveloped in pristine audio clarity. You are not just watching a performance; you are stepping directly
+            inside the music.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Tour Dates Preview ═══ -->
+    <section class="tour-preview">
+      <div class="section-header">
+        <h2 class="section-title">Five Cities. <span class="gradient-text">One Legend.</span></h2>
+        <p class="section-subtitle" style="margin: 0 auto;">From the streets of Chennai to the skyline of New York — the
+          Wonderment Tour spans the globe.</p>
+      </div>
+      <div class="tour-grid stagger-children">
+        <div class="glass-card tour-card animate-fade-in-up">
+          <div class="tour-city">Chennai</div>
+          <div class="tour-date">Oct 10, 2026 · 19:30 IST</div>
+          <div class="tour-venue-name">Jawaharlal Nehru Stadium</div>
+        </div>
+        <div class="glass-card tour-card animate-fade-in-up">
+          <div class="tour-city">Mumbai</div>
+          <div class="tour-date">Oct 24, 2026 · 19:30 IST</div>
+          <div class="tour-venue-name">D.Y Patil Stadium</div>
+        </div>
+        <div class="glass-card tour-card animate-fade-in-up">
+          <div class="tour-city">Dubai</div>
+          <div class="tour-date">Nov 4, 2026 · 20:00 GST</div>
+          <div class="tour-venue-name">Coca-Cola Arena</div>
+        </div>
+        <div class="glass-card tour-card animate-fade-in-up">
+          <div class="tour-city">London</div>
+          <div class="tour-date">Nov 21, 2026 · 19:00 GMT</div>
+          <div class="tour-venue-name">The O2 Arena</div>
+        </div>
+        <div class="glass-card tour-card animate-fade-in-up">
+          <div class="tour-city">New York</div>
+          <div class="tour-date">Dec 12, 2026 · 19:30 EST</div>
+          <div class="tour-venue-name">Madison Square Garden</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Collage Break ═══ -->
+    <section class="collage-section">
+      <img src="home/collage.jpg" alt="Concert experience collage">
+      <div class="collage-overlay">
+        <div class="collage-text">
+          <h2 class="section-title">Feel the <span class="gradient-text">Energy</span></h2>
+          <a href="events.html" class="btn btn-primary">View Full Timeline</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ What to Expect ═══ -->
+    <section class="experience-section">
+      <div class="section-header">
+        <h2 class="section-title">What Awaits <span class="gradient-text">You</span></h2>
+        <p class="section-subtitle" style="margin: 0 auto;">An immersive journey through three decades of timeless
+          music.</p>
+      </div>
+      <div class="exp-grid stagger-children">
+        <div class="glass-card exp-card animate-fade-in-up">
+          <div class="exp-icon">🎹</div>
+          <h3>Live Orchestra</h3>
+          <p>A 50-piece orchestra performing Rahman's iconic compositions — from Roja to Tere Ishk Mein — in
+            breathtaking
+            arrangements.</p>
+        </div>
+        <div class="glass-card exp-card animate-fade-in-up">
+          <div class="exp-icon">🌌</div>
+          <h3>Visual Spectacle</h3>
+          <p>360° projection mapping, holographic displays, and immersive LED walls transforming each venue into a
+            living canvas.</p>
+        </div>
+        <div class="glass-card exp-card animate-fade-in-up">
+          <div class="exp-icon">🎤</div>
+          <h3>Surprise Collaborations</h3>
+          <p>Special guest appearances from acclaimed artists joining Rahman on stage for once-in-a-lifetime duets.</p>
+        </div>
+        <div class="glass-card exp-card animate-fade-in-up">
+          <div class="exp-icon">✨</div>
+          <h3>VIP Experience</h3>
+          <p>Golden Circle access, exclusive merchandise, backstage tours, and meet-and-greet opportunities for VIP
+            ticket holders.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CTA Banner ═══ -->
+    <section class="cta-banner">
+      <h2 class="section-title">Ready to <span class="gradient-text">Experience Wonderment?</span></h2>
+      <p>Don't miss the most anticipated music tour of A.R.Rahman at 2026. Secure your seats now.</p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="tickets.html" class="btn btn-gold">Book Tickets Now</a>
+        <a href="eligibility.html" class="btn btn-outline">Check Eligibility</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer">
+    <p>&copy; 2026 The Wonderment Tour. This is an unofficial fan project.
+      <a href="contact.html">Disclaimer &amp; Contact</a>
+    </p>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // ── Typewriter Effect ──
+    const twLines = [
+      { id: 'tw-line-1', text: 'The Wonderment Tour' },
+      { id: 'tw-line-2', text: 'Of AR Rahman' },
+      { id: 'tw-line-3', text: '2026' }
+    ];
+
+    function typewriterLine(lineObj, charDelay) {
+      return new Promise(resolve => {
+        const el = document.getElementById(lineObj.id);
+        const text = lineObj.text;
+        let i = 0;
+        el.classList.add('typing');
+        // Animate width to fit content
+        el.style.width = 'auto';
+        // Measure the final width
+        el.textContent = text;
+        const fullWidth = el.scrollWidth + 4; // +4 for caret
+        el.textContent = '';
+        el.style.width = '0';
+
+        function type() {
+          if (i < text.length) {
+            el.textContent += text.charAt(i);
+            // Smoothly grow width
+            el.style.width = ((i + 1) / text.length * fullWidth) + 'px';
+            i++;
+            setTimeout(type, charDelay);
+          } else {
+            el.style.width = fullWidth + 'px';
+            el.classList.remove('typing');
+            el.classList.add('done');
+            setTimeout(resolve, 300);
+          }
+        }
+        type();
+      });
+    }
+
+    // Start the typewriter sequence after a short delay
+    setTimeout(async () => {
+      for (const line of twLines) {
+        await typewriterLine(line, 70);
+      }
+    }, 800);
+
+    // ── Video Sound Toggle ──
+    function toggleSound() {
+      const video = document.getElementById('hero-video');
+      const icon = document.getElementById('sound-icon');
+      const label = document.getElementById('sound-label');
+      if (video.muted) {
+        video.muted = false;
+        icon.textContent = '🔊';
+        label.textContent = 'Mute';
+      } else {
+        video.muted = true;
+        icon.textContent = '🔇';
+        label.textContent = 'Tap to Unmute';
+      }
+    }
+  </script>
+</body>
+
+</html>

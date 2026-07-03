@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Wonderment Tour Events Timeline — A.R. Rahman live across 5 cities in 2026. Chennai, Mumbai, Dubai, London, New York.">
+  <title>Events | The Wonderment Tour</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Full-screen video backdrop ── */
+    .events-bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .events-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        180deg,
+        rgba(5, 2, 16, 0.80) 0%,
+        rgba(5, 2, 16, 0.70) 30%,
+        rgba(5, 2, 16, 0.75) 70%,
+        rgba(5, 2, 16, 0.90) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* ── Content over video ── */
+    .events-page {
+      position: relative;
+      z-index: 2;
+    }
+
+    .events-hero {
+      padding: 120px 40px 40px;
+      text-align: center;
+    }
+    .events-hero .section-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+    }
+    .events-hero p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-top: 12px;
+    }
+
+    /* ── Horizontal timeline container ── */
+    .timeline-container {
+      padding: 40px 40px 80px;
+      overflow-x: auto;
+      overflow-y: visible;
+    }
+    .timeline-track {
+      display: flex;
+      gap: 28px;
+      min-width: max-content;
+      padding-bottom: 12px;
+    }
+
+    /* ── Timeline line ── */
+    .timeline-line {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding: 0 40px 0;
+      margin-bottom: 0;
+    }
+    .timeline-dot-row {
+      display: flex;
+      gap: 28px;
+      min-width: max-content;
+      justify-content: stretch;
+    }
+    .timeline-dot-wrap {
+      width: 310px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .timeline-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.5);
+      position: relative;
+    }
+    .timeline-connector {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue), var(--accent-pink));
+      opacity: 0.4;
+      min-width: 28px;
+    }
+
+    /* ── Event Card ── */
+    .event-card {
+      width: 310px;
+      flex-shrink: 0;
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--card-radius);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+    }
+    .event-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--border-glow);
+      box-shadow: 0 12px 48px rgba(168, 85, 247, 0.25);
+    }
+
+    .event-card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .event-card-body {
+      padding: 24px;
+    }
+
+    .event-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+
+    .event-city {
+      font-family: var(--font-heading);
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .event-date {
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .event-venue {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .event-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .event-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .event-link-venue {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+    }
+    .event-link-venue:hover {
+      background: var(--bg-glass-strong);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+    .event-link-tickets {
+      background: var(--gradient-primary);
+      color: #fff;
+    }
+    .event-link-tickets:hover {
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* ── Scrollbar for timeline ── */
+    .timeline-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    .timeline-container::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+    }
+    .timeline-container::-webkit-scrollbar-thumb {
+      background: var(--gradient-primary);
+      border-radius: 6px;
+    }
+
+    .scroll-hint {
+      text-align: center;
+      padding: 0 40px 12px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 900px) {
+      .events-hero {
+        padding: 100px 20px 30px;
+      }
+      .timeline-container {
+        padding: 30px 20px 60px;
+      }
+      .event-card {
+        width: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Background Video ═══ -->
+  <video class="events-bg-video" autoplay loop muted playsinline>
+    <source src="Events/BG.mp4" type="video/mp4">
+  </video>
+  <div class="events-overlay"></div>
+
+  <!-- ═══ Navigation ═══ -->
+  <nav class="navbar" id="main-nav">
+    <a href="index.html" class="nav-logo">THE WONDERMENT TOUR</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="venue.html">Venues</a></li>
+      <li><a href="eligibility.html">Eligibility</a></li>
+      <li><a href="tickets.html">Tickets</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══ Page Content ═══ -->
+  <div class="events-page page-wrapper">
+
+    <section class="events-hero">
+      <h1 class="section-title">The <span class="gradient-text">Wonderment</span> Timeline</h1>
+      <p>Five cities. Five unforgettable nights. Scroll through the journey.</p>
+    </section>
+
+    <div class="scroll-hint">← Scroll horizontally to explore →</div>
+
+    <!-- ═══ Horizontal Timeline ═══ -->
+    <div class="timeline-container">
+      <div class="timeline-track stagger-children">
+
+        <!-- 1. Chennai -->
+        <div class="event-card animate-fade-in-up">
+          <img class="event-card-img" src="Events/Chennai.webp" alt="Chennai">
+          <div class="event-card-body">
+            <div class="event-number">1</div>
+            <div class="event-city">Chennai</div>
+            <div class="event-date">October 10, 2026 · 19:30 IST</div>
+            <div class="event-venue">📍 Jawaharlal Nehru Stadium</div>
+            <div class="event-links">
+              <a href="venue.html#chennai" class="event-link-venue">View Venue Details</a>
+              <a href="tickets.html?event=Chennai" class="event-link-tickets">Book Tickets →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Mumbai -->
+        <div class="event-card animate-fade-in-up">
+          <img class="event-card-img" src="Events/Mumbai" alt="Mumbai">
+          <div class="event-card-body">
+            <div class="event-number">2</div>
+            <div class="event-city">Mumbai</div>
+            <div class="event-date">October 24, 2026 · 19:30 IST</div>
+            <div class="event-venue">📍 D.Y Patil Stadium</div>
+            <div class="event-links">
+              <a href="venue.html#mumbai" class="event-link-venue">View Venue Details</a>
+              <a href="tickets.html?event=Mumbai" class="event-link-tickets">Book Tickets →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Dubai -->
+        <div class="event-card animate-fade-in-up">
+          <img class="event-card-img" src="Events/Dubai.avif" alt="Dubai">
+          <div class="event-card-body">
+            <div class="event-number">3</div>
+            <div class="event-city">Dubai</div>
+            <div class="event-date">November 4, 2026 · 20:00 GST</div>
+            <div class="event-venue">📍 Coca-Cola Arena</div>
+            <div class="event-links">
+              <a href="venue.html#dubai" class="event-link-venue">View Venue Details</a>
+              <a href="tickets.html?event=Dubai" class="event-link-tickets">Book Tickets →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. London -->
+        <div class="event-card animate-fade-in-up">
+          <img class="event-card-img" src="Events/London.webp" alt="London">
+          <div class="event-card-body">
+            <div class="event-number">4</div>
+            <div class="event-city">London</div>
+            <div class="event-date">November 21, 2026 · 19:00 GMT</div>
+            <div class="event-venue">📍 The O2 Arena</div>
+            <div class="event-links">
+              <a href="venue.html#london" class="event-link-venue">View Venue Details</a>
+              <a href="tickets.html?event=London" class="event-link-tickets">Book Tickets →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. New York -->
+        <div class="event-card animate-fade-in-up">
+          <img class="event-card-img" src="Events/New York.avif" alt="New York">
+          <div class="event-card-body">
+            <div class="event-number">5</div>
+            <div class="event-city">New York</div>
+            <div class="event-date">December 12, 2026 · 19:30 EST</div>
+            <div class="event-venue">📍 Madison Square Garden</div>
+            <div class="event-links">
+              <a href="venue.html#newyork" class="event-link-venue">View Venue Details</a>
+              <a href="tickets.html?event=NewYork" class="event-link-tickets">Book Tickets →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer" style="position: relative; z-index: 2;">
+    <p>&copy; 2026 The Wonderment Tour. This is an unofficial fan project. 
+      <a href="contact.html">Disclaimer &amp; Contact</a>
+    </p>
+  </footer>
+
+  <script>
+    // Mobile nav
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+    // Navbar scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+    });
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
