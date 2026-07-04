@@ -1,0 +1,74 @@
+# Implementation Plan - The Wonderment Tour Events Page
+
+We will create a gorgeous, responsive, and interactive events timeline page (`events.html`) and a placeholder ticket booking page (`tickets.html`) in the project workspace root. 
+
+The events timeline will feature the 5 tour dates side-by-side with a looped, silent video background (`Events/BG.mp4`).
+
+## Image Analysis
+
+We analyzed the five city images inside the [Events](file:///c:/Users/ELANGO%20N%20D/OneDrive/Desktop/SUMMER/The%20Wonderment%20tour/Events) directory:
+
+1. **Chennai (`Chennai.webp`)**: Format `WEBP`, dimensions `560x996` (Aspect ratio ~9:16, vertical portrait).
+2. **Mumbai (`Mumbai`)**: Format `AVIF` (lacks extension but is raw AVIF), dimensions `1824x1824` (Aspect ratio 1:1, square).
+3. **Dubai (`Dubai.avif`)**: Format `AVIF`, dimensions `640x1066` (Aspect ratio ~9:16, vertical portrait).
+4. **London (`London.webp`)**: Format `WEBP`, dimensions `1280x1280` (Aspect ratio 1:1, square).
+5. **New York (`New York.avif`)**: Format `AVIF`, dimensions `1280x853` (Aspect ratio 3:2, landscape).
+
+### Design Recommendations for Images
+Because these images have widely varying aspect ratios (from portrait 9:16 to landscape 3:2), we must:
+- Use a CSS class for all city image elements to normalize their display dimensions.
+- Use `width: 100%`, `height: 220px` (or similar), and `object-fit: cover` to crop them dynamically and avoid distortion.
+- Apply `border-radius` and modern hover transitions (e.g. scale up, overlay glow) for a sleek, premium card design.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> The image file for Mumbai is named `Mumbai` without any extension (e.g. `.avif` or `.webp`). It is encoded as an AVIF file. We will reference it directly as `Events/Mumbai` in the HTML, which modern browsers support. 
+
+> [!TIP]
+> We will apply a dark semi-transparent overlay (`rgba(10, 5, 20, 0.7)`) with a blur over the background video `BG.mp4`. This ensures the video remains a stunning backdrop without lowering the readability of the card content, text, or buttons.
+
+---
+
+## Proposed Changes
+
+### [Web Application Components]
+
+#### [NEW] [events.html](file:///c:/Users/ELANGO%20N%20D/OneDrive/Desktop/SUMMER/The%20Wonderment%20tour/events.html)
+A premium HTML page containing:
+- **Google Fonts Integration**: Importing "Outfit" and "Inter" for a clean, modern aesthetic.
+- **Backdrop Video (`Events/BG.mp4`)**: Positioned fixed, filling the viewport, muted, looping, and autoplaying.
+- **Overlay Layer**: A dark glassmorphism gradient ensuring readability of white text.
+- **Sticky Glassmorphic Navigation Bar**: Allowing easy navigation between Home, Events, and Tickets.
+- **Horizontal Events Container**: A flexbox row that arranges the 5 events side-by-side:
+  1. **Chennai**: October 10, 2026, 19:30 IST @ Jawaharlal Nehru Stadium
+  2. **Mumbai**: October 24, 2026, 19:30 IST @ D.Y Patil Stadium
+  3. **Dubai**: November 4, 2026, 20:00 GST @ Coca-Cola Arena
+  4. **London**: November 21, 2026, 19:00 GMT @ The O2 Arena
+  5. **New York**: December 12, 2026, 19:30 EST @ Madison Square Garden
+- **Event Cards**: Glassmorphic cards containing the place name, formatted date & time, venue name, the city image, a link to the venue's Google Maps location, and a CTA button "Book Tickets" pointing to `tickets.html?event=city_name`.
+- **CSS Styling**: Styled using internal `<style>` block (or a separate `events.css` if preferred, but single-file layout works beautifully for static pages).
+
+#### [NEW] [tickets.html](file:///c:/Users/ELANGO%20N%20D/OneDrive/Desktop/SUMMER/The%20Wonderment%20tour/tickets.html)
+A basic ticket booking page that:
+- Reads the URL query parameters (e.g., `?event=Chennai`) using JavaScript.
+- Displays a stunning ticket selection form customized for the selected city and stadium.
+- Reuses the design system (fonts, dark mode, glassmorphism) for visual consistency.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Validate HTML structure for compliance and correctness.
+- Test the JavaScript URL parameter parsing.
+
+### Manual Verification
+- Launch the page in a browser using a local HTTP server or direct file opening.
+- Verify that the background video plays continuously and silently.
+- Confirm the layout is side-by-side on desktop screens, with horizontal scrolling if necessary.
+- Verify text contrast and readability against the video.
+- Test that the venue link opens the maps page in a new window.
+- Verify that clicking "Book Tickets" correctly loads `tickets.html` and parses the event parameter.
